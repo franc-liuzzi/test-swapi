@@ -3,9 +3,15 @@ import fetch from './fetch';
 import getCharacterDetails from './getCharacterDetails';
 
 export default async (episodeID) => {
-    if (Number(episodeID) != episodeID) throw new Error('episodeID must be a Number');
+    if (Number(episodeID) != episodeID) throw new Error('<episode-id> must be a Number');
 
-    const filmData = await fetch(`${_CONFIG_.film.baseURL}/${episodeID}`);
+    const filmData = await (async () => {
+        try {
+            return await fetch(`${_CONFIG_.film.baseURL}/${episodeID}`);
+        } catch (err) {
+            throw new Error('<episode-id> ${episodeID} is not a SW Episode.');
+        }
+    })();
 
     const characters = filmData[_CONFIG_.film.charactersPath]
         .map((characterURL) => {

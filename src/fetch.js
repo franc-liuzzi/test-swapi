@@ -6,7 +6,11 @@ export default async function (url) {
         headers: { 'Content-Type': 'application/json' },
     });
 
-    const data = await response.json();
-
-    return data;
+    switch (response.status) {
+        case 200:
+            return await response.json();
+        case 404:
+        default:
+            throw new Error(response.statusText);
+    }
 }
